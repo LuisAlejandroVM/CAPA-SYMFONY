@@ -6,18 +6,18 @@ getUsers:
    path: /users
    controller: App\Controller\UserController::getUsers
 
-getUserById:
-  path: /user/{id}
-  controller: App\Controller\UserController::getUserById
+# getUserById:
+#   path: /user/{id}
+#   controller: App\Controller\UserController::getUserById
 
-createUser:
-  path: /user/create
-  controller: App\Controller\UserController::createUser
+# createUser:
+#   path: /user/create
+#   controller: App\Controller\UserController::createUser
 
-updateUser:
-  path: /user/update/{id}
-  controller: App\Controller\UserController::updateUser
+# updateUser:
+#   path: /user/update/{id}
+#   controller: App\Controller\UserController::updateUser
 
-deleteUser:
-  path: /user/delete/{id}
-  controller: App\Controller\UserController::deleteUser
+# deleteUser:
+#   path: /user/delete/{id}
+#   controller: App\Controller\UserController::deleteUser
