@@ -10,9 +10,9 @@ getUsers:
 #   path: /user/{id}
 #   controller: App\Controller\UserController::getUserById
 
-# createUser:
-#   path: /user/create
-#   controller: App\Controller\UserController::createUser
+createUser:
+  path: /user/create
+  controller: App\Controller\UserController::createUser
 
 # updateUser:
 #   path: /user/update/{id}
