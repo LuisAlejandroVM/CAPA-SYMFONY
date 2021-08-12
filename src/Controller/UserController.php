@@ -26,6 +26,7 @@ class UserController extends AbstractController{
         $form_users->handleRequest($request);
 
         if($form_users->isSubmitted() && $form_users->isValid()){
+            $users->setStatus(1);
             $em->persist($users);
             $em->flush();
 
@@ -35,5 +36,37 @@ class UserController extends AbstractController{
         return $this->render('user/user_create.html.twig', [
             'form_users' => $form_users->createView()
         ]);
+    }
+
+    public function updateUser(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+
+        $users = $em->getRepository('App:Users')->find($id);
+
+        $form_users = $this->createForm(\App\Form\UserType::class, $users);
+        $form_users->handleRequest($request);
+
+        if($form_users->isSubmitted() && $form_users->isValid()){
+            $em->persist($users);
+            $em->flush();
+
+            return $this->redirectToRoute('getUsers');
+        }
+
+        return $this->render('user/user_update.html.twig', [
+            'form_users' => $form_users->createView()
+        ]);
+    }
+
+    public function deleteUser(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+
+        $users = $em->getRepository('App:Users')->find($id);
+
+        $users->setStatus(0);
+        $em->persist($users);
+        $em->flush();
+        
+        return $this->redirectToRoute('getUsers');
     }
 }

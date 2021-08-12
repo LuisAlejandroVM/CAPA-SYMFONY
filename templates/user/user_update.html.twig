@@ -1,0 +1,39 @@
+{% extends('base.html.twig') %}
+
+{% block title %}
+    Actualizar usuarios | Symfony
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Actualización!</h1>
+    {{ form_start(form_users) }}
+
+        <div class="form-group col-lg-12">
+            {{ form_row(form_users.name) }}
+        </div>
+        <div class="form-group col-lg-12">
+            {{ form_row(form_users.lastname) }}
+        </div>
+        <div class="form-group col-lg-12">
+            {{ form_row(form_users.email) }}
+        </div>
+        <div class="form-group col-lg-12">
+            {{ form_row(form_users.password) }}
+        </div>
+        {{ form_widget(form_users.submit) }}
+        <a href="{{ path('getUsers') }}" class="btn btn-default">Cancelar</a>
+
+    {{ form_end(form_users) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+    </script>
+{% endblock %}
