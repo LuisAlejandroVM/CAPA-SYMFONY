@@ -26,9 +26,14 @@ class UserController extends AbstractController{
         $form_users->handleRequest($request);
 
         if($form_users->isSubmitted() && $form_users->isValid()){
-            // Create user
+            $em->persist($users);
+            $em->flush();
+
+            return $this->redirectToRoute('getUsers');
         }
 
-        // do redirection
+        return $this->render('user/user_create.html.twig', [
+            'form_users' => $form_users
+        ]);
     }
 }
