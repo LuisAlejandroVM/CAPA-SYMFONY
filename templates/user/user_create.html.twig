@@ -26,6 +26,8 @@
         <div class="form-group col-lg-12">
             {{ form_row(form_users.password) }}
         </div>
+        {{ form_widget(form_users.submit) }}
+        <a href="{{ path('getUsers') }}" class="btn btn-default">Cancelar</a>
 
     {{ form_end(form_users) }}
 {% endblock %}
