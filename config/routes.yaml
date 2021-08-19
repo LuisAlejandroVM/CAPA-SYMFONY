@@ -21,3 +21,7 @@ deleteUser:
 report_pdf_user:
   path: /user/report-pdf
   controller: App\Controller\UserController::getPDF
+
+report_excel_user:
+  path: /user/report-excel
+  controller: App\Controller\UserController::getExcel

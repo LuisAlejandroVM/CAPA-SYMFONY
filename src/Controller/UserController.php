@@ -10,6 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 // Importamos html2pdf
 use Spipu\Html2Pdf\Html2Pdf;
 
+// Importamos PhpOffice
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 class UserController extends AbstractController{
 
     public function getUsers(){
@@ -104,5 +107,31 @@ class UserController extends AbstractController{
         return new Response($html2pdf->Output(utf8_encode($cadena), 'D'), 200, [
             'Content-Type' => 'application/pdf;charset=UTF-8'
         ]);
+    }
+
+    public function getExcel(){
+        $em = $this->getDoctrine()->getManager();
+        $listUsers = $em->getRepository('App:Users')->findBy([], ['name' => 'ASC']);
+
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue("A1", "#");
+        $sheet->setCellValue("B1", "Nombre completo");
+        $sheet->setCellValue("C1", "Correo electrónico");
+
+        $style = [
+            'font' => [
+                'bold' => true, 
+                'color' => ['rgb' => "FFFFFF"],
+                'size' => 12,
+                'name' => "Century Gothic"
+            ],
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            ]
+        ];
     }
 }
