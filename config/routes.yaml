@@ -17,3 +17,7 @@ updateUser:
 deleteUser:
   path: /user/delete/{id}
   controller: App\Controller\UserController::deleteUser
+
+report_pdf_user:
+  path: /user/report-pdf
+  controller: App\Controller\UserController::getPDF
