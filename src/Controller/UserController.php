@@ -12,6 +12,10 @@ use Spipu\Html2Pdf\Html2Pdf;
 
 // Importamos PhpOffice
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class UserController extends AbstractController{
 
@@ -133,5 +137,37 @@ class UserController extends AbstractController{
                 'horizontal' => Alignment::HORIZONTAL_CENTER
             ]
         ];
+
+        $sheet->getStyle("A1:C1")->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle("A1:C1")->getFill()->getStartColor()->setRGB("012756");
+
+        for ($i = 0; $i < count($listUsers); $i++) {
+            $counter = $i + 2;
+            $sheet->setCellValue("A" . $counter, $i + 1);
+            $sheet->getStyle("A" . $counter)->getFill()->setFillType(Fill::FILL_SOLID);
+            $sheet->getStyle("A" . $counter)->getFill()->getStartColor()->setRGB("012756");
+
+            $sheet->setCellValue("B" . $counter, $listUsers[$i]->getName() . " " 
+                    . $listUsers[$i]->getLastname());
+            $sheet->setCellValue("C" . $counter, $listUsers[$i]->getEmail());
+        }
+
+        $sheet->getStyle('A1:C1')->applyFromArray($style);
+
+        $sheet->setTitle("Usuarios");
+
+        $sheet->getColumnDimension("B")->setWidth(30);
+
+        // new element xlsx
+        $writer = new Xlsx($spreadsheet);
+        
+        // file name and temporal file
+        $actualDate =(new \DateTime())->format('d-m-Y');
+        $fileName = $actualDate . '.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        
+        // save temporal file and return it
+        $writer->save($temp_file);
+        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }
