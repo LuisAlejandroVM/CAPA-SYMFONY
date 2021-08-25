@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+// JSON response
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 // Importamos html2pdf
 use Spipu\Html2Pdf\Html2Pdf;
 
@@ -19,12 +22,29 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class UserController extends AbstractController{
 
-    public function getUsers(){
+    public function getUsers(Request $request){
         $em = $this->getDoctrine()->getManager();
-        $listUsers = $em->getRepository('App:Users')->findBy([], ['name' => 'ASC']);
-        return $this->render('user/users.html.twig', [
-            'listUsers' => $listUsers
-        ]);
+        $slug = $request->query->get("slug");
+        
+        if($slug != null){
+            $data = ['status' => 'success', 'code' => 200, 'msg' => 'No hay resultados.'];
+
+            $query = $em->createQuery('SELECT u.iduser idUser, u.name, u.lastname, u.email, u.status FROM App:Users u');
+            $listUsers = $query->getResult();
+
+            if (count($listUsers) > 0) {
+                $data = [
+                    'status' => 'success',
+                    'code' => 200,
+                    'msg' => 'Se encontraron: ' . count($listUsers) . ' resultados.',
+                    'listUsers' => $listUsers
+                ];
+            }
+            return new JsonResponse($data);
+        }
+
+        return $this->render('user/users.html.twig');
+        
     }
 
     public function createUser(Request $request){
@@ -138,21 +158,23 @@ class UserController extends AbstractController{
             ]
         ];
 
-        $sheet->getStyle("A1:C1")->getFill()->setFillType(Fill::FILL_SOLID);
-        $sheet->getStyle("A1:C1")->getFill()->getStartColor()->setRGB("012756");
+        $header = 'A1:C1';
+        $blue_color = '012756';
+
+        $sheet->getStyle($header)->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle($header)->getFill()->getStartColor()->setRGB($blue_color);
 
         for ($i = 0; $i < count($listUsers); $i++) {
             $counter = $i + 2;
             $sheet->setCellValue("A" . $counter, $i + 1);
             $sheet->getStyle("A" . $counter)->getFill()->setFillType(Fill::FILL_SOLID);
-            $sheet->getStyle("A" . $counter)->getFill()->getStartColor()->setRGB("012756");
+            $sheet->getStyle("A" . $counter)->getFill()->getStartColor()->setRGB($blue_color);
 
-            $sheet->setCellValue("B" . $counter, $listUsers[$i]->getName() . " " 
-                    . $listUsers[$i]->getLastname());
+            $sheet->setCellValue("B" . $counter, $listUsers[$i]->getName() . " " . $listUsers[$i]->getLastname());
             $sheet->setCellValue("C" . $counter, $listUsers[$i]->getEmail());
         }
 
-        $sheet->getStyle('A1:C1')->applyFromArray($style);
+        $sheet->getStyle($header)->applyFromArray($style);
 
         $sheet->setTitle("Usuarios");
 

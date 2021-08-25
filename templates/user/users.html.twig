@@ -11,10 +11,12 @@
 {% endblock %}
 
 {% block body %}
-    <div>
-        <h1>Hola a todos</h1>
+    <div ng-app="user" ng-controller="UserController">
+        <h1>Hola Mundo</h1>
         <a href="{{ path('createUser') }}" class="btn btn-primary">Registrar usuario</a>
         <a href="{{ path('report_pdf_user') }}" class="btn btn-danger">Generar PDF</a>
+        <a href="{{ path('report_excel_user') }}" class="btn btn-success">Generar Excel</a>
+        
         <table>
             <thead>
                 <tr>
@@ -26,27 +28,11 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for user in listUsers %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.lastname }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.status }}</td>
-                        <td>
-                            <a href="{{ path('updateUser', {'id': user.idUser}) }}" class="btn btn-primary">Modificar</a>
-                            <a href="{{ path('deleteUser', {'id': user.idUser}) }}" class="btn btn-danger">Eliminar</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+            <tbody id="fillUsers"></tbody>
         </table>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-
-    </script>
+    <script src="{{ asset('../templates/user/users.js') }}"></script>
 {% endblock %}
